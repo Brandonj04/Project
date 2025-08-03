@@ -135,7 +135,7 @@ session_start();
       <div class="row">
         <div class="col-md-6">
           <p><strong>Address:</strong> 123 E-Commerce Rd, Windsor, ON</p>
-          <p><strong>Email:</strong> support@shopsmart.com</p>
+          <p><strong>Email:</strong> </p>
           <p><strong>Phone:</strong> (519) 555-1234</p>
         </div>
         <div class="col-md-6">
@@ -146,7 +146,7 @@ session_start();
 
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3">
-      &copy; <?= date("Y") ?> ShopSmart. All rights reserved.
+      &copy; <?= date("Y") ?> All rights reserved.
     </footer>
 
 
