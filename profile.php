@@ -1,22 +1,22 @@
 <?php
 session_start();
-include 'config/db.php';
 
-// Redirect if not logged in
-if (!isset($_SESSION['user'])) {
+
+
+if ($_SESSION['name'] == null) {
     header("Location: login.php");
     exit();
 }
 
-$userId = $_SESSION['user']['id'];
+$userId = $_SESSION['id'];
 $success = '';
 $error = '';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name     = trim($_POST['name']);
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
+    $name     = $_SESSION['name'];
+    $email    = $_SESSION['email'];
+    $password = $_SESSION['password'];
     $confirm  = $_POST['confirm'];
 
     if (empty($name) || empty($email)) {
@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (mysqli_stmt_execute($stmt)) {
-            $_SESSION['user']['name']  = $name;
-            $_SESSION['user']['email'] = $email;
+            $_SESSION['name']  = $name;
+            $_SESSION['email'] = $email;
             $success = "Profile updated successfully.";
         } else {
             $error = "Something went wrong. Try again.";
@@ -46,12 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch user data
-$stmt = mysqli_prepare($conn, "SELECT name, email FROM users WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $userId);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$user = mysqli_fetch_assoc($result);
 ?>
 
 <!DOCTYPE html>
@@ -76,12 +70,12 @@ $user = mysqli_fetch_assoc($result);
     <form method="POST" action="profile.php">
         <div class="mb-3">
             <label for="name" class="form-label">Full Name</label>
-            <input type="text" name="name" id="name" class="form-control" required value="<?= htmlspecialchars($user['name']) ?>">
+            <input type="text" name="name" id="name" class="form-control" <?= $_SESSION['name'] ?>>
         </div>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email Address</label>
-            <input type="email" name="email" id="email" class="form-control" required value="<?= htmlspecialchars($user['email']) ?>">
+            <input type="email" name="email" id="email" class="form-control" <?= $_SESSION['email'] ?>>
         </div>
 
         <hr>
@@ -98,7 +92,7 @@ $user = mysqli_fetch_assoc($result);
         </div>
 
         <button type="submit" class="btn btn-primary">Update Profile</button>
-        <a href="index.php" class="btn btn-secondary">Back to Home</a>
+        <a href="home.php" class="btn btn-secondary">Back to Home</a>
     </form>
 </div>
 

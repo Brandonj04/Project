@@ -1,8 +1,15 @@
 <?php
 session_start();
-
+    function writeStringToFile($a, $string) {
+       $s= "\xEF\xBB\xBF".$string; // utf8 bom
+       fwrite($a, $s);
+     }
 // Initialize variables
 $errors = [];
+
+
+$myfile = fopen("Login_info.txt", "a+");
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name     = trim($_POST['name']);
@@ -10,54 +17,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $confirm  = $_POST['confirm'];
 
+    $_SESSION['email'] = $email;
+    $_SESSION['password'] = $password;
+
     // Basic validation
     if (empty($name) || empty($email) || empty($password) || empty($confirm)) {
         $errors[] = "All fields are required.";
     }
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
 
-    if ($password !== $confirm) {
+    elseif ($password !== $confirm) {
         $errors[] = "Passwords do not match.";
     }
 
-    // Check if email already exists
-    $check = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
-    mysqli_stmt_bind_param($check, "s", $email);
-    mysqli_stmt_execute($check);
-    mysqli_stmt_store_result($check);
-
-    if (mysqli_stmt_num_rows($check) > 0) {
-        $errors[] = "Email already registered.";
-    }
-
-    if (empty($errors)) {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        $stmt = mysqli_prepare($conn, "INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "sss", $name, $email, $hashedPassword);
-
-        if (mysqli_stmt_execute($stmt)) {
-            $_SESSION['success'] = "Registration successful! You can now log in.";
-            header("Location: login.php");
-            exit();
-        } else {
-            $errors[] = "Error: " . mysqli_error($conn);
+    else{
+        $txt = $email . $password . "\n";
+        $_SESSION['user'] = $name;
+        $_SESSION['logged_in'] = true;
+        while (($line = fgets($myfile)) !== false) {
+                if ( $txt == $line){
+                    
+                    $line = fgets($myfile);
+                    $_SESSION['name'] = $line;
+                    $line = fgets($myfile);
+                    $_SESSION['id'] = $line;
+                    fclose($myfile);
+                    header("Location: http://localhost:8000/home.php");
+                }
         }
+        $lines = count(file("Login_info.txt"));
+        writeStringToFile($myfile, $txt . $name . "\n" . $lines . "\n");
+        $_SESSION['name'] = $name;
+        
+        $_SESSION['id'] = $lines;
+        
+        fclose($myfile);
+        header("Location: http://localhost:8000/home.php");
     }
-}
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - ShopSmart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        echo "User: " . htmlspecialchars($row['name']);
+    } else {
+        echo "No users found or query failed.";
+    }
+    }
+    ?>
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Register - ShopSmart</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
 <body>
 
 <div class="container mt-5 col-md-6">

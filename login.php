@@ -3,22 +3,30 @@ session_start();
 
 // Initialize error
 $error = '';
+$myfile = fopen("Login_info.txt", "a+");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email']);
     $password = $_POST['password'];
 
+    $txt = $email . $password;
+
     if (!empty($email) && !empty($password)) {
-        // Prepare and execute query
-        $stmt = mysqli_prepare($conn, "SELECT id, name, email, password, status FROM users WHERE email = ?");
-        mysqli_stmt_bind_param($stmt, "s", $email);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
+        while (($line = fgets($myfile)) !== false) {
+            if ( $txt= $line){
+                $_SESSION['email'] = $email;
+                $_SESSION['password'] = $password;
+                $line = fgets($myfile);
+                $_SESSION['name'] = $line;
+                $line = fgets($myfile);
+                $_SESSION['id'] = $line;
+                $_SESSION['logged_in'] = true;
+                header("Location: http://localhost:8000/home.php");
+            }
+        }
 
         if ($user = mysqli_fetch_assoc($result)) {
-            if ($user['status'] === 'disabled') {
-                $error = "Your account has been disabled by an administrator.";
-            } elseif (password_verify($password, $user['password'])) {
+            if (password_verify($password, $user['password'])) {
                 // Login success
                 $_SESSION['user'] = [
                     'id'    => $user['id'],
