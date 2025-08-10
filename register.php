@@ -1,10 +1,10 @@
 <?php
 session_start();
     function writeStringToFile($a, $string) {
-       $s= "\xEF\xBB\xBF".$string; // utf8 bom
+       $s= "\xEF\xBB\xBF".$string; 
        fwrite($a, $s);
      }
-// Initialize variables
+
 $errors = [];
 
 
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['email'] = $email;
     $_SESSION['password'] = $password;
 
-    // Basic validation
+
     if (empty($name) || empty($email) || empty($password) || empty($confirm)) {
         $errors[] = "All fields are required.";
     }

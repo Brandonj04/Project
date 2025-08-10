@@ -1,0 +1,5 @@
+1   Smartphone X2   Electronics   High-end smartphone with excellent camera and long battery life.   699.99   images/smartphone.jpg
+2   T-shirt Classic   Clothing   Comfortable cotton T-shirt available in multiple colors.   19.99   images/tshirt.jpg
+3   Blender Pro   Home   Powerful blender for smoothies, soups, and sauces.   59.99   images/blender.jpg
+4   Gaming Laptop G5   Electronics   High-performance gaming laptop with RTX graphics.   1299.99   images/laptop.jpg
+5   Book   Books   High-performance gaming laptop with RTX graphics.   12.99   images/HPbook.jpg

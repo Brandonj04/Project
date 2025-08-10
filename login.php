@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Initialize error
 $error = '';
 $myfile = fopen("Login_info.txt", "a+");
 
@@ -12,35 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $txt = $email . $password;
 
     if (!empty($email) && !empty($password)) {
-        while (($line = fgets($myfile)) !== false) {
-            if ( $txt= $line){
+        while (!feof($myfile)) {
+            $line = fgets($myfile);
+            if ($txt= $line){
                 $_SESSION['email'] = $email;
                 $_SESSION['password'] = $password;
-                $line = fgets($myfile);
-                $_SESSION['name'] = $line;
-                $line = fgets($myfile);
-                $_SESSION['id'] = $line;
+                $_SESSION['name'] = fgets($myfile);
+                $_SESSION['id'] = fgets($myfile);
                 $_SESSION['logged_in'] = true;
+                fclose($myfile);
                 header("Location: http://localhost:8000/home.php");
             }
-        }
-
-        if ($user = mysqli_fetch_assoc($result)) {
-            if (password_verify($password, $user['password'])) {
-                // Login success
-                $_SESSION['user'] = [
-                    'id'    => $user['id'],
-                    'name'  => $user['name'],
-                    'email' => $user['email'],
-                ];
-                header("Location: profile.php"); // or dashboard.php
-                exit();
-            } else {
-                $error = "Invalid email or password.";
-            }
-        } else {
+        
             $error = "Account not found.";
-        }
+        } 
     } else {
         $error = "Please fill in all fields.";
     }
@@ -51,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - ShopSmart</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>

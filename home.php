@@ -1,5 +1,4 @@
 <?php
-// Start the session
 session_start();
 ?>
 <!DOCTYPE html>
@@ -9,9 +8,9 @@ session_start();
   <head>
     <title>Home Page</title>
     <meta name="author" content="Brandon Jillson">
-    <meta charset="utf-8">
     <meta name="description" content="Shopping project">
     <meta name="keywords" content="e-commerce, online store, shopping, shop">
+    <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -24,7 +23,6 @@ session_start();
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    /* Style the header */
     header {
       background-color: #000000;
       padding: 10px;
@@ -34,16 +32,15 @@ session_start();
       color: rgb(255, 255, 255);
     }
 
-    /* Create two columns/boxes that floats next to each other */
+
     nav {
       float: left;
       width: 30%;
-      height: 300px; /* only for demonstration, should be removed */
+      height: 300px;
       background: #ccc;
       padding: 20px;
     }
 
-    /* Style the list inside the menu */
     nav ul {
       list-style-type: none;
       padding: 0;
@@ -51,14 +48,12 @@ session_start();
 
 
 
-    /* Clear floats after the columns */
     section::after {
       content: "";
       display: table;
       clear: both;
     }
 
-    /* Style the footer */
     footer {
       background-color: #ffffff;
       padding: 10px;
@@ -66,7 +61,6 @@ session_start();
       color: rgb(0, 0, 0);
     }
 
-    /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
     @media (max-width: 600px) {
       nav, article {
         width: 100%;
@@ -81,7 +75,7 @@ session_start();
 
 
 
-    <!-- Header -->
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Home</a>
@@ -103,33 +97,25 @@ session_start();
       </div>
     </nav>
 
-    <!-- Category Menu -->
+
     <div class="container mt-4">
       <h3 class="text-center">Shop by Category</h3>
       <div class="row text-center">
         <div class="col">
-          <a href="category.php?cat=electronics" class="btn btn-outline-primary m-2">Electronics</a>
-          <a href="category.php?cat=clothing" class="btn btn-outline-success m-2">Clothing</a>
-          <a href="category.php?cat=home" class="btn btn-outline-warning m-2">Home</a>
-          <a href="category.php?cat=books" class="btn btn-outline-info m-2">Books</a>
+          <a href="products.php?category=Electronics" class="btn btn-outline-primary m-2">Electronics</a>
+          <a href="products.php?category=Clothing" class="btn btn-outline-success m-2">Clothing</a>
+          <a href="products.php?category=Home" class="btn btn-outline-warning m-2">Home</a>
+          <a href="products.php?category=Books" class="btn btn-outline-info m-2">Books</a>
         </div>
       </div>
     </div>
 
-    <!-- Featured Products (Dynamic) -->
-    <div class="container mt-5">
-      <h3 class="text-center mb-4">Featured Products</h3>
-      <div class="row">
-        <?php
-        $query = "SELECT * FROM products LIMIT 4";
-        
-        ?>
-      </div>
-    </div>
 
 
 
-    <!-- Contact Info + Map -->
+
+
+
     <div class="container my-5">
       <h4 class="text-center">Visit Our Store</h4>
       <div class="row">
@@ -144,7 +130,7 @@ session_start();
       </div>
     </div>
 
-    <!-- Footer -->
+
     <footer class="bg-dark text-white text-center py-3">
       &copy; <?= date("Y") ?> All rights reserved.
     </footer>

@@ -2,17 +2,12 @@
 session_start();
 
 
-
-if ($_SESSION['name'] == null) {
-    header("Location: login.php");
-    exit();
-}
-
 $userId = $_SESSION['id'];
 $success = '';
 $error = '';
+$myfile = fopen("Login_info.txt", "a+");
 
-// Handle form submission
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name     = $_SESSION['name'];
     $email    = $_SESSION['email'];
@@ -26,23 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!empty($password) && $password !== $confirm) {
         $error = "Passwords do not match.";
     } else {
-        // Update logic
-        if (!empty($password)) {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = mysqli_prepare($conn, "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssi", $name, $email, $hashedPassword, $userId);
-        } else {
-            $stmt = mysqli_prepare($conn, "UPDATE users SET name = ?, email = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "ssi", $name, $email, $userId);
-        }
-
-        if (mysqli_stmt_execute($stmt)) {
-            $_SESSION['name']  = $name;
-            $_SESSION['email'] = $email;
-            $success = "Profile updated successfully.";
-        } else {
-            $error = "Something went wrong. Try again.";
-        }
+        
+    
     }
 }
 
@@ -54,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Your Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
